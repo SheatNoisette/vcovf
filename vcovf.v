@@ -22,11 +22,16 @@ pub mut:
 	contexts map[string]&VConverageContext
 }
 
+[inline]
 pub fn get_coverage_context(context_name string) &VConverageContext {
-	if context_name !in vcovf_contexts.contexts {
-		panic('Unknown context')
+	$if test {
+		if context_name !in vcovf_contexts.contexts {
+			panic('Unknown context')
+		}
+		return vcovf_contexts.contexts[context_name]
+	} $else {
+		return voidptr(0)
 	}
-	return vcovf_contexts.contexts[context_name]
 }
 
 pub fn create_coverage_context(context_name string) &VConverageContext {
@@ -47,13 +52,15 @@ pub fn create_coverage_context(context_name string) &VConverageContext {
 
 [inline]
 pub fn (vc &VConverageContext) add_coverage_point(line string) {
-	line_number := strconv.atoi(line) or { panic("Invalid line number '$line' - $err") }
+	$if test {
+		line_number := strconv.atoi(line) or { panic("Invalid line number '$line' - $err") }
 
-	mut context := vcovf_contexts.contexts[vc.name]
+		mut context := vcovf_contexts.contexts[vc.name]
 
-	if line_number !in vc.line_tested {
-		context.coverage_points_called += 1
-		context.line_tested[line_number] = true
+		if line_number !in vc.line_tested {
+			context.coverage_points_called += 1
+			context.line_tested[line_number] = true
+		}
 	}
 }
 
@@ -67,12 +74,10 @@ pub fn new_coverage(function_name string) &VConverageContext {
 	return create_coverage_context(function_name)
 }
 
-
 // Fancy gets
 
 [inline]
-pub fn (vc &VConverageContext) get_coverage_points() int
-{
+pub fn (vc &VConverageContext) get_coverage_points() int {
 	return vc.coverage_points_called
 }
 
