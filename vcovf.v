@@ -50,17 +50,15 @@ pub fn create_coverage_context(context_name string) &VConverageContext {
 	return vcovf_contexts.contexts[context.name]
 }
 
-[inline]
+[if test]
 pub fn (vc &VConverageContext) add_coverage_point(line string) {
-	$if test {
-		line_number := strconv.atoi(line) or { panic("Invalid line number '$line' - $err") }
+	line_number := strconv.atoi(line) or { panic("Invalid line number '$line' - $err") }
 
-		mut context := vcovf_contexts.contexts[vc.name]
+	mut context := vcovf_contexts.contexts[vc.name]
 
-		if line_number !in vc.line_tested {
-			context.coverage_points_called += 1
-			context.line_tested[line_number] = true
-		}
+	if line_number !in vc.line_tested {
+		context.coverage_points_called += 1
+		context.line_tested[line_number] = true
 	}
 }
 
