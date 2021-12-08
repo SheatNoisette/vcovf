@@ -1,6 +1,6 @@
 # VCovf
 
-Proof-of-concept of function coverage micro-framework made in V.
+Proof-of-concept of a function coverage micro-framework made in V.
 It is not recommended to use this module in production.
 
 As the 7-dec-2021, no native code coverage tool exists in the V compiler.
@@ -44,7 +44,7 @@ fn my_function(a int) {
 }
 
 fn my_function_coverage_test() {
-    // Create a function
+        // Create a function coverage context
 	mut function_cov := vcovf.new_coverage(my_function)
 
 	my_function(0)
@@ -65,6 +65,7 @@ v -enable-globals -stats test .
 
 The VCovf library calls are automatically removed if the `test` or `vcovf`
 macros are not set.
+
 # Run example
 
 Run the integrated example (examples_test.v):
